@@ -13,7 +13,36 @@ if (mainColors !== null) {
             // Add Active Class
             element.classList.add("active");
         }
-    })
+    });
+}
+
+// Random Backgroun Option
+let backgroundOption = true;
+
+// Variable To Control The Background Interval
+let backgroundInterval;
+
+// Check If There's Local Storage Random Background Item
+let backgroundLocalItem = localStorage.getItem("background_option");
+
+// Check If Random Background Local Storage Is Not Empty
+if (backgroundLocalItem !== null) {
+    if (backgroundLocalItem === 'true') {
+        backgroundOption = true;
+    } else {
+        backgroundOption = false;
+    }
+
+    // Remove Active Class From All Sapns
+    document.querySelectorAll(".random-backgrounds span").forEach(element => {
+        element.classList.remove("active");
+    });
+
+    if (backgroundLocalItem === 'true') {
+        document.querySelector(".random-backgrounds .yes").classList.add("active");
+    } else {
+        document.querySelector(".random-backgrounds .no").classList.add("active");
+    }
 }
 
 // Toggle Spin Class On Icon
@@ -48,16 +77,109 @@ colorsLi.forEach(li => {
     });
 });
 
+// Switch Random Background Option
+const randomBackEl = document.querySelectorAll(".random-backgrounds span");
+
+// Loop On All Spans
+randomBackEl.forEach(span => {
+    // Click On Every Span
+    span.addEventListener("click", (e) => {
+        // Remove Active Class From All Childrens
+        e.target.parentElement.querySelectorAll(".active").forEach(element => {
+            element.classList.remove("active");
+        })
+
+        // Add Active Class On Self
+        e.target.classList.add("active");
+
+        if (e.target.dataset.background === 'yes') {
+            backgroundOption = true;
+            randomizeImgs();
+            localStorage.setItem("background_option", true);
+        } else {
+            backgroundOption = false;
+            clearInterval(backgroundInterval);
+            localStorage.setItem("background_option", false);
+        }
+    });
+});
+
 // Select Landing Page Element
 let landingPage = document.querySelector(".landing-page");
 
 // Get Array Of Imgs
 let imgsArray = ["01.webp", "02.webp", "03.webp", "04.jpg", "05.jpg"];
 
-setInterval(() => {
-    // Get Random Number
-    let randomNumber = Math.floor(Math.random() * imgsArray.length);
+// Function To Randomize Imgs
+function randomizeImgs() {
+    if (backgroundOption === true) {
+        backgroundInterval = setInterval(() => {
+            // Get Random Number
+            let randomNumber = Math.floor(Math.random() * imgsArray.length);
+        
+            // Change Background Image Url
+            landingPage.style.backgroundImage = 'url("imgs/' + imgsArray[randomNumber] + '")';
+        }, 1000);
+    }
+}
 
-    // Change Background Image Url
-    landingPage.style.backgroundImage = 'url("imgs/' + imgsArray[randomNumber] + '")';
-}, 10000)
+randomizeImgs();
+
+// Select Skills Selector
+let ourSkills = document.querySelector(".skills");
+
+window.onscroll = function() {
+    // Skills Offset Top
+    let skillsOffsetTop = ourSkills.offsetTop;
+
+    // Skills Outer Height
+    let skillsOuterHeight = ourSkills.offsetHeight;
+
+    // Window Height
+    let windowHeight = this.innerHeight;
+
+    // Window Scroll Top
+    let windowScrollTop = this.pageYOffset;
+
+    if (windowScrollTop >= (skillsOffsetTop + skillsOuterHeight - windowHeight)) {
+        let allSkills = document.querySelectorAll(".skill-box .skill-progress span");
+
+        allSkills.forEach(skill => {
+            skill.style.width = skill.dataset.progress;
+        });
+    }
+};
+
+// Create Popup With The Image
+let ourGallery = document.querySelectorAll(".gallery img");
+
+ourGallery.forEach(img => {
+    img.addEventListener('click', (e) => {
+        // Create Overlay Element
+        let overlay = document.createElement("div");
+
+        // Add Calss To Overlay
+        overlay.className = 'popup-overlay';
+
+        // Append Overlay To The Body
+        document.body.appendChild(overlay);
+
+        // Create The Popup Box
+        let popupBox = document.createElement("div");
+
+        //  Add Class To The Popup Box
+        popupBox.className = 'popup-box';
+
+        //  Create The Image
+        let popupImage = document.createElement("img");
+
+        // Set Image Source
+        popupImage.src = img.src;
+
+        // Add Image To Popup Box
+        popupBox.appendChild(popupImage);
+
+        // Append The Popup Box To Body
+        document.body.appendChild(popupBox);
+    });
+});
