@@ -28,6 +28,7 @@ body {
     z-index: 1000;
     min-height: 100vh;
     transition: .3s;
+    border: 1px solid #eee;
 }
 
 .settings-box.open {
@@ -103,9 +104,10 @@ body {
     background-color: pink;
 }
 
-.settings-box .random-backgrounds .yes, .settings-box .random-backgrounds .no {
+.settings-box .option-box .yes,
+.settings-box .option-box .no {
     width: 50px;
-    background-color: #009688;
+    background-color: var(--main-color);
     color: #fff;
     margin-top: 10px;
     display: inline-block;
@@ -117,8 +119,21 @@ body {
     cursor: pointer;
 }
 
-.settings-box .random-backgrounds span.active {
+.settings-box .option-box span.active {
     opacity: 1;
+}
+
+.settings-box .reset-options {
+    background-color: #f44336;
+    border: none;
+    width: 178px;
+    margin: 10px auto;
+    display: block;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 /* End Settings Box */
 
